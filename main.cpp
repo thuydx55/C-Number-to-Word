@@ -146,6 +146,8 @@ string process(string &numStr) {
             result += words[i] + " ";
     }
 
+    result = result.length() ? result : ones[0];
+
     return result;
 }
 
