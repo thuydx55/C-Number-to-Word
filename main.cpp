@@ -4,55 +4,55 @@
 
 using namespace std;
 
-// string ones[] = 
-//     {
-//         "zero",     "one",      "two",          "three",        "four",
-//         "five",     "six",      "seven",        "eight",        "nine"
-//     };
-// string teens[] = 
-//     {
-//         "ten",      "eleven",   "twelve",       "thirteen",     "fourteen",
-//         "fifteen",  "sixteen",  "seventeen",    "eighteen",     "nineteen"
-//     };
-// string tens[] = 
-//     {
-//         "",        "",          "twenty",       "thirty",       "fourty",
-//         "fifty",   "sixty",     "seventy",      "eighty",       "ninety"
-//     };
-// string powers[] = 
-//     {
-//         "",        "thousand",  "million",      "billion"
-//     };
-
-// string hundred = "hundred";
-// string connectiveHundredsAndNext = "and";
-// string connectiveTensAndOnes = "";
-// string negative = "negative";
-
 string ones[] = 
     {
-        "không",    "một",      "hai",      "ba",       "bốn",
-        "năm",      "sáu",      "bảy",      "tám",      "chín"
+        "zero",     "one",      "two",          "three",        "four",
+        "five",     "six",      "seven",        "eight",        "nine"
     };
 string teens[] = 
     {
-        "mười",     "mười một", "mười hai", "mười ba",  "mười bốn",
-        "mười năm", "mười sáu", "mười bảy", "mười tám", "mười chín"
+        "ten",      "eleven",   "twelve",       "thirteen",     "fourteen",
+        "fifteen",  "sixteen",  "seventeen",    "eighteen",     "nineteen"
     };
 string tens[] = 
     {
-        "",         "",         "hai mươi", "ba mươi",  "bốn mươi",
-        "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"
+        "",        "",          "twenty",       "thirty",       "fourty",
+        "fifty",   "sixty",     "seventy",      "eighty",       "ninety"
     };
 string powers[] = 
     {
-        "",         "ngàn",     "triệu",    "tỉ"
+        "",        "thousand",  "million",      "billion"
     };
 
-string hundred = "trăm";
-string connectiveHundredsAndNext = "";
-string connectiveTensAndOnes = "linh";
-string negative = "âm";
+string hundred = "hundred";
+string connectiveHundredsAndNext = "and";
+string connectiveTensAndOnes = "";
+string negative = "negative";
+
+// string ones[] = 
+//     {
+//         "không",    "một",      "hai",      "ba",       "bốn",
+//         "năm",      "sáu",      "bảy",      "tám",      "chín"
+//     };
+// string teens[] = 
+//     {
+//         "mười",     "mười một", "mười hai", "mười ba",  "mười bốn",
+//         "mười năm", "mười sáu", "mười bảy", "mười tám", "mười chín"
+//     };
+// string tens[] = 
+//     {
+//         "",         "",         "hai mươi", "ba mươi",  "bốn mươi",
+//         "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"
+//     };
+// string powers[] = 
+//     {
+//         "",         "ngàn",     "triệu",    "tỉ"
+//     };
+
+// string hundred = "trăm";
+// string connectiveHundredsAndNext = "";
+// string connectiveTensAndOnes = "linh";
+// string negative = "âm";
 
 string getElement(const string arr[], const char& value) {
     return arr[value - '0'];
