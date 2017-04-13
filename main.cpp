@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Number.h"
+#include "Language.h"
 
 using namespace std;
 
@@ -18,16 +19,8 @@ int main(int argc, char const *argv[])
             return 1;
         }
 
-        cout << num.getTextRepresentation() << endl;
+        cout << num.getTextRepresentation(LanguageType::Vietnamese) << endl;
     }
-    // string numStr = "-100001100001100001100001";
-
-    // if (!validate(numStr)) {
-    //     cout << "'" << numStr << "' is not a number!" << endl;
-    //     return 1;
-    // }
-
-    // cout << process(numStr) << endl;
 
     return 0;
 }

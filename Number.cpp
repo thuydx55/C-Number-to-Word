@@ -1,56 +1,7 @@
 #include "Number.h"
+#include <iostream>
 
 using namespace std;
-
-string ones[] = 
-    {
-        "zero",     "one",      "two",          "three",        "four",
-        "five",     "six",      "seven",        "eight",        "nine"
-    };
-string teens[] = 
-    {
-        "ten",      "eleven",   "twelve",       "thirteen",     "fourteen",
-        "fifteen",  "sixteen",  "seventeen",    "eighteen",     "nineteen"
-    };
-string tens[] = 
-    {
-        "",        "",          "twenty",       "thirty",       "fourty",
-        "fifty",   "sixty",     "seventy",      "eighty",       "ninety"
-    };
-string powers[] = 
-    {
-        "",        "thousand",  "million",      "billion"
-    };
-
-string hundred = "hundred";
-string connectiveHundredsAndNext = "and";
-string connectiveTensAndOnes = "";
-string negative = "negative";
-
-// string ones[] = 
-//     {
-//         "không",    "một",      "hai",      "ba",       "bốn",
-//         "năm",      "sáu",      "bảy",      "tám",      "chín"
-//     };
-// string teens[] = 
-//     {
-//         "mười",     "mười một", "mười hai", "mười ba",  "mười bốn",
-//         "mười năm", "mười sáu", "mười bảy", "mười tám", "mười chín"
-//     };
-// string tens[] = 
-//     {
-//         "",         "",         "hai mươi", "ba mươi",  "bốn mươi",
-//         "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"
-//     };
-// string powers[] = 
-//     {
-//         "",         "ngàn",     "triệu",    "tỉ"
-//     };
-
-// string hundred = "trăm";
-// string connectiveHundredsAndNext = "";
-// string connectiveTensAndOnes = "linh";
-// string negative = "âm";
 
 Number::Number(string pNumStr) {
     mNumStr = pNumStr;
@@ -73,27 +24,28 @@ bool Number::isValid() {
     return true;
 }
 
-string Number::getTextRepresentation() {
+string Number::getTextRepresentation(LanguageType type) {
     vector<string> words;
+    Language* lang = Language::getLanguage(type);
 
     string tempNumStr = string(mNumStr);
 
     if (tempNumStr[0] == '-') {
-        words.push_back(negative);
+        words.push_back(lang->getNegative());
         tempNumStr.erase(0,1);
     }
 
     while(tempNumStr.size() % 3)
         tempNumStr = '0' + tempNumStr;
 
-    stack<string> twelveGroups = divideStringToGroupOfTwelve(tempNumStr);
-    while(!twelveGroups.empty()) {
-        string group12Str = twelveGroups.top();
-        twelveGroups.pop();
+    stack<string> bigGroups = divideStringToBigGroup(tempNumStr);
+    while(!bigGroups.empty()) {
+        string bigGroup = bigGroups.top();
+        bigGroups.pop();
 
-        // cout << group12Str << endl;
+        // cout << bigGroup << endl;
 
-        stack<string> groups = divideStringToGroupOfThree(group12Str);
+        stack<string> groups = divideStringToSmallGroup(bigGroup);
 
         while(!groups.empty()) {
             string subNumber = groups.top();
@@ -105,28 +57,30 @@ string Number::getTextRepresentation() {
                 continue;
 
             if (subNumber[0] > '0') {
-                words.push_back(getElement(ones, subNumber[0]));
-                words.push_back(hundred);
+                words.push_back(getElement(lang->getOnes(), subNumber[0]));
+                words.push_back(lang->getHundred());
             }
 
             if (subNumber[1] == '0' || subNumber[1] > '1') {
                 if (subNumber[1] > '1')
-                    words.push_back(getElement(tens, subNumber[1]));
+                    words.push_back(getElement(lang->getTens(), subNumber[1]));
                 if (subNumber[2] > '0') {
                     if (words.size())
-                        words.push_back(connectiveHundredsAndNext);
+                        words.push_back(lang->getConnectiveHundredsAndNext());
                     if (subNumber[1] == '0' && words.size() > 0)
-                        words.push_back(connectiveTensAndOnes);
-                    words.push_back(getElement(ones, subNumber[2]));
+                        words.push_back(lang->getConnectiveTensAndOnes());
+                    words.push_back(getElement(lang->getOnes(), subNumber[2]));
                 }
             }
             else {
-                words.push_back(connectiveHundredsAndNext);
-                words.push_back(getElement(teens, subNumber[2]));
+                words.push_back(lang->getConnectiveHundredsAndNext());
+                words.push_back(getElement(lang->getTeens(), subNumber[2]));
             }
-
-            words.push_back(powers[twelveGroups.size()]);
+            const vector<string> powers = lang->getPowers();
             words.push_back(powers[groups.size()]);
+            for (short i = 0; i < bigGroups.size(); i++) {
+                words.push_back(powers[powers.size()-1]);
+            }
         }
     }
 
@@ -137,29 +91,46 @@ string Number::getTextRepresentation() {
             result += words[i] + " ";
     }
 
-    result = result.length() ? result : ones[0];
+    result = result.length() ? result : lang->getOnes()[0];
+
+    delete lang;
 
     return result;
 }
 
-string Number::getElement(const string arr[], const char& value) {
+string Number::getElement(const vector<string>& arr, const char& value) {
     return arr[value - '0'];
 }
 
-stack<string> Number::divideStringToGroupOfTwelve(const string &numStr) {
+// Divide string into groups by length. 
+// First has 12 characters, each others have 9 characters but auto add '000' at the end
+// E.g: 100001100001100001100001 ~ 100 001100001 100001100001
+stack<string> Number::divideStringToBigGroup(const string &numStr) {
     stack<string> groups;
 
-    for (short i = numStr.length()-1; i >= 0; i -= 12) {
-        if (i >= 11)
-            groups.push(numStr.substr(i-11, 12));
-        else
-            groups.push(numStr.substr(0, i+1));
+    short length = 12;
+    for (short i = numStr.length()-1; i >= 0;) {
+        string str = "";
+        if (i >= length-1) {
+            str = numStr.substr(i-(length-1), length);
+            i -= length;
+            length = 9;
+        }
+        else {
+            str = numStr.substr(0, i+1);
+            i -= length;
+        }
+
+        if (str.length() < 12)
+            str = str + "000";
+        groups.push(str);
     }
 
     return groups;
 }
 
-stack<string> Number::divideStringToGroupOfThree(const string &numStr) {
+// Divide string into groups by length. Each has 3 characters
+stack<string> Number::divideStringToSmallGroup(const string &numStr) {
     stack<string> groups;
 
     for (short i = numStr.length()-1; i >= 0; i -= 3) {
