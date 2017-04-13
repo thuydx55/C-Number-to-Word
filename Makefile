@@ -1,7 +1,7 @@
 CC=gcc
-CFLAGS=-I.
+CFLAGS=-I. 
 # DEPS = hellomake.h
-OBJ = main.o 
+OBJ = main.o Number.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
