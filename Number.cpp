@@ -43,7 +43,7 @@ string Number::getTextRepresentation(LanguageType type) {
         string bigGroup = bigGroups.top();
         bigGroups.pop();
 
-        // cout << bigGroup << endl;
+        cout << bigGroup << endl;
 
         stack<string> groups = divideStringToSmallGroup(bigGroup);
 
@@ -121,7 +121,7 @@ stack<string> Number::divideStringToBigGroup(const string &numStr) {
             i -= length;
         }
 
-        if (str.length() < 12)
+        if (str.length() < 12 && groups.size() > 0)
             str = str + "000";
         groups.push(str);
     }

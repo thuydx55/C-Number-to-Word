@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
             return 1;
         }
 
-        cout << num.getTextRepresentation(LanguageType::Vietnamese) << endl;
+        cout << num.getTextRepresentation() << endl;
     }
 
     return 0;
