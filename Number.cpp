@@ -29,9 +29,10 @@ string Number::getTextRepresentation(LanguageType type) {
     Language* lang = Language::getLanguage(type);
 
     string tempNumStr = string(mNumStr);
+    bool isNegative = false;
 
     if (tempNumStr[0] == '-') {
-        words.push_back(lang->getNegative());
+        isNegative = true;
         tempNumStr.erase(0,1);
     }
 
@@ -43,7 +44,7 @@ string Number::getTextRepresentation(LanguageType type) {
         string bigGroup = bigGroups.top();
         bigGroups.pop();
 
-        cout << bigGroup << endl;
+        // cout << bigGroup << endl;
 
         stack<string> groups = divideStringToSmallGroup(bigGroup);
 
@@ -73,7 +74,8 @@ string Number::getTextRepresentation(LanguageType type) {
                 }
             }
             else {
-                words.push_back(lang->getConnectiveHundredsAndNext());
+                if (words.size())
+                    words.push_back(lang->getConnectiveHundredsAndNext());
                 words.push_back(getElement(lang->getTeens(), subNumber[2]));
             }
             const vector<string> powers = lang->getPowers();
@@ -83,7 +85,8 @@ string Number::getTextRepresentation(LanguageType type) {
             }
         }
     }
-
+    if (words.size() && isNegative)
+        words.insert(words.begin(), lang->getNegative());
     string result = "";
     for (short i = 0; i < words.size(); ++i)
     {
