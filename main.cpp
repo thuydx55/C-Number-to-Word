@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Number.h"
-#include "Language.h"
+#include "NumberRepresentation/Number.h"
+#include "NumberRepresentation/Language.h"
 
 using namespace std;
 

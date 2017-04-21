@@ -1,9 +1,22 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++11 $(DEBUG)
-OBJ = main.o Number.o Language.o LanguageEnglish.o LanguageVietnamese.o
 
-%.o: %.c $(DEPS)
+SRCS = NumberRepresentation/Number.o \
+		NumberRepresentation/Language.o \
+		NumberRepresentation/LanguageEnglish.o \
+		NumberRepresentation/LanguageVietnamese.o
+MAIN = main.o $(SRCS)
+TEST = test.o $(SRCS) 
+
+# $(info $(SRCS))
+# $(info $(MAIN))
+# $(info $(TEST))
+
+%.o: %.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-main: $(OBJ)
-	g++ -o $@ $^ $(CXXFLAGS)
+main: $(MAIN)
+	$(CXX) -o $@ $^ $(CXXFLAGS)
+
+test: $(TEST)
+	$(CXX) -o $@ $^ $(CXXFLAGS)

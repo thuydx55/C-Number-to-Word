@@ -62,20 +62,19 @@ string Number::getTextRepresentation(LanguageType type) {
                 words.push_back(lang->getHundred());
             }
 
+            if ((subNumber[0] > '0' || words.size()) && (subNumber[1] > '0' || subNumber[2] > '0'))
+                words.push_back(lang->getConnectiveHundredsAndNext());
+
             if (subNumber[1] == '0' || subNumber[1] > '1') {
                 if (subNumber[1] > '1')
                     words.push_back(getElement(lang->getTens(), subNumber[1]));
                 if (subNumber[2] > '0') {
-                    if (words.size())
-                        words.push_back(lang->getConnectiveHundredsAndNext());
                     if (subNumber[1] == '0' && words.size() > 0)
                         words.push_back(lang->getConnectiveTensAndOnes());
                     words.push_back(getElement(lang->getOnes(), subNumber[2]));
                 }
             }
             else {
-                if (words.size())
-                    words.push_back(lang->getConnectiveHundredsAndNext());
                 words.push_back(getElement(lang->getTeens(), subNumber[2]));
             }
             const vector<string> powers = lang->getPowers();
@@ -94,7 +93,11 @@ string Number::getTextRepresentation(LanguageType type) {
             result += words[i] + " ";
     }
 
-    result = result.length() ? result : lang->getOnes()[0];
+    // Remove last space
+    if (result.length())
+        result = result.substr(0, result.size()-1);
+    else
+        result = lang->getOnes()[0];
 
     delete lang;
 
